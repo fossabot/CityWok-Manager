@@ -9,4 +9,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Base structure of the project
 - This CHANGELOG file to track the developer of the project
 - gitignore file
+- README and LICENSE
 
