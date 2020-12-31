@@ -12,4 +12,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - README and LICENSE
 - Config file
 - SQLAlchemy
+- Babel
+- Employee Model
 
