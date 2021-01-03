@@ -54,9 +54,9 @@ class Employee(db.Model):
     nationality = Column(CountryType)
     nif = Column(Integer, unique=True)
     niss = Column(Integer, unique=True)
-    start_date = Column(Date)
+    employment_date = Column(Date)
     total_salary = Column(SqliteDecimal(2))
-    tax_salary = Column(SqliteDecimal(2))
+    taxed_salary = Column(SqliteDecimal(2))
     remark = Column(Text)
     active = Column(Boolean, default=True)
 
