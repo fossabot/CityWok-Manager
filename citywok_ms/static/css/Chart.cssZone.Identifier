@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://github.com/chartjs/Chart.js/releases/tag/v2.9.3
+HostUrl=https://github-production-release-asset-2e65be.s3.amazonaws.com/8843683/e9b74b00-0716-11ea-9591-a080ed360181?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20200905%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20200905T150535Z&X-Amz-Expires=300&X-Amz-Signature=329aeec8037dd51d80b017b5bde1e74f6b67ddb45d8495cb89450dc901f0c17d&X-Amz-SignedHeaders=host&actor_id=47987376&key_id=0&repo_id=8843683&response-content-disposition=attachment%3B%20filename%3DChart.css&response-content-type=application%2Foctet-stream
