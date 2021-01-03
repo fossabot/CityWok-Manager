@@ -1,6 +1,9 @@
-from flask import Flask, request, current_app
-from flask_sqlalchemy import SQLAlchemy
+import flask_babel
+from flask import Flask, current_app, request
 from flask_babel import Babel
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy_utils import i18n
+
 from citywok_ms.config import Config
 
 db = SQLAlchemy()
@@ -11,6 +14,7 @@ def create_app(config_class=Config):
     # create the app instance
     app = Flask(__name__)
     app.config.from_object(config_class)
+    i18n.get_locale = flask_babel.get_locale
 
     # init extensions
     db.init_app(app)
@@ -18,14 +22,14 @@ def create_app(config_class=Config):
 
     with app.app_context():
         # imports
-        # TODO:
+        from citywok_ms.employee.routes import employee
 
         # blueprints
-        # TODO:
+        app.register_blueprint(employee)
 
         return app
 
 
 @babel.localeselector
-def get_local():
+def get_locale():
     return request.accept_languages.best_match(current_app.config['LANGUAGES'])
