@@ -9,11 +9,12 @@ from wtforms.fields.html5 import (DateField, DecimalField, EmailField,
                                   IntegerField, TelField)
 from wtforms.validators import (Email, InputRequired, NumberRange, Optional,
                                 ValidationError)
-from wtforms_alchemy import CountryField, QuerySelectField
+from wtforms_alchemy import QuerySelectField
 from wtforms_components import SelectField
 
 
 class EmployeeForm(FlaskForm):
+    hide_id = HiddenField()
     first_name = StringField(label='First Name',
                              validators=[InputRequired()])
     last_name = StringField(label='Last Name',
@@ -22,7 +23,7 @@ class EmployeeForm(FlaskForm):
                           default='-',
                           validators=[Optional()])
     sex = BlankSelectField(label='Sex',
-                           choices=[('', '---')]+SEX,
+                           choices=SEX,
                            message='---',
                            validators=[InputRequired()])
     birthday = DateField(label='Birthday',
@@ -35,9 +36,10 @@ class EmployeeForm(FlaskForm):
                        validators=[Optional(),
                                    Email()],
                        filters=[lambda x: x or None])
-    id_type = SelectField(label='ID Type',
-                          validators=[InputRequired()],
-                          choices=[('', '---')]+ID)
+    id_type = BlankSelectField(label='ID Type',
+                               validators=[InputRequired()],
+                               choices=ID,
+                               message='---')
     id_number = StringField(label='ID Number',
                             validators=[InputRequired()])
     id_validity = DateField(label='ID Validity',
@@ -55,7 +57,7 @@ class EmployeeForm(FlaskForm):
                                 validators=[InputRequired(),
                                             NumberRange(min=0)])
     taxed_salary = DecimalField(label='Taxed Salary',
-                                validators=[Optional(),
+                                validators=[InputRequired(),
                                             NumberRange(min=0)],
                                 default=635)
 
@@ -71,10 +73,10 @@ class EmployeeForm(FlaskForm):
 
     def validate_nif(self, nif):
         e = Employee.query.filter_by(nif=nif.data).first()
-        if nif.data and e and (e.id != self.ID.data):
+        if nif.data and e and (e.id != self.hide_id.data):
             raise ValidationError('This NIF already existe')
 
     def validate_niss(self, niss):
         e = Employee.query.filter_by(niss=niss.data).first()
-        if niss.data and e and (e.id != self.ID.data):
+        if niss.data and e and (e.id != self.hide_id.data):
             raise ValidationError('This NISS already existe')

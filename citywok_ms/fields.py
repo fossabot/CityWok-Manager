@@ -13,6 +13,10 @@ class BlankSelectField(SelectField):
         self.message = message
         self.choices = [('', self.message)] + self.choices
 
+    def process_formdata(self, valuelist):
+        if valuelist:
+            self.data = valuelist[0] or None
+
 
 class BlankCountryField(SelectField):
     def __init__(self, message, *args, **kwargs):
