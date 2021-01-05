@@ -20,7 +20,7 @@ class EmployeeForm(FlaskForm):
     last_name = StringField(label='Last Name',
                             validators=[InputRequired()])
     zh_name = StringField(label='Chinese Name',
-                          default='-',
+                          filters=[lambda x: x or None],
                           validators=[Optional()])
     sex = BlankSelectField(label='Sex',
                            choices=SEX,
@@ -29,7 +29,7 @@ class EmployeeForm(FlaskForm):
     birthday = DateField(label='Birthday',
                          validators=[Optional()],
                          render_kw={'type': 'date'})
-    contact = TelField(label='contact',
+    contact = TelField(label='Contact',
                        validators=[Optional()],
                        filters=[lambda x: x or None])
     email = EmailField(label='E-mail',
