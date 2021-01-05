@@ -48,10 +48,14 @@ class Employee(db.Model):
     birthday = Column(Date)
     contact = Column(String)
     email = Column(String)
-    id_type = Column(ChoiceType(ID))
-    id_number = Column(String)
-    id_validity = Column(Date)
-    nationality = Column(CountryType)
+    id_type = Column(ChoiceType(ID),
+                     nullable=False)
+    id_number = Column(String,
+                       nullable=False)
+    id_validity = Column(Date,
+                         nullable=False)
+    nationality = Column(CountryType,
+                         nullable=False)
     nif = Column(Integer, unique=True)
     niss = Column(Integer, unique=True)
     employment_date = Column(Date)
