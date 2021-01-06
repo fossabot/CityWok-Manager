@@ -1,6 +1,8 @@
 import pytest
 
 from citywok_ms import create_app, db
+from citywok_ms.models import Employee
+from datetime import date
 
 
 @pytest.fixture(scope='module')
@@ -18,3 +20,30 @@ def test_client():
             db.create_all()
             yield testing_client  # this is where the testing happens!
             db.drop_all()
+
+
+@pytest.fixture(scope='module')
+def test_employees():
+    e1 = Employee(first_name='TEST_1',
+                  last_name='INFO',
+                  sex='F',
+                  id_type='passport',
+                  id_number='123',
+                  id_validity=date(2100, 1, 1),
+                  nationality='US',
+                  total_salary='1000',
+                  taxed_salary='635.00')
+    db.session.add(e1)
+
+    e2 = Employee(first_name='TEST_2',
+                  last_name='INFO',
+                  sex='M',
+                  id_type='passport',
+                  id_number='123',
+                  id_validity=date(2100, 1, 1),
+                  nationality='PT',
+                  total_salary='1500',
+                  taxed_salary='635.00')
+
+    db.session.add(e2)
+    db.session.commit()

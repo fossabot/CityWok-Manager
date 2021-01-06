@@ -1,5 +1,6 @@
 from citywok_ms import db
 from citywok_ms.models import Employee
+from flask import request
 
 
 def test_get(test_client):
@@ -51,6 +52,7 @@ def test_basic_info(test_client):
                                 follow_redirects=True)
 
     assert response.status_code == 200
+    assert request.url.endswith('/employee/')
     assert 'Successfully' in response.data.decode('utf-8')
     assert 'This field is required' not in response.data.decode('utf-8')
 

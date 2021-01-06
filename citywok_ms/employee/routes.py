@@ -22,5 +22,5 @@ def new():
         db.session.add(employee)
         db.session.commit()
         flash('Successfully added new employee', 'success')
-        return redirect(url_for('employee.new'))
+        return redirect(url_for('employee.index'))
     return render_template('employee/new.html', title='New Employee', form=form)
