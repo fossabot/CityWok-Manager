@@ -7,6 +7,12 @@ from flask import Blueprint, flash, redirect, render_template, url_for
 employee = Blueprint('employee', __name__, url_prefix="/employee")
 
 
+@employee.route("/")
+def index():
+    employees = db.session.query(Employee).all()
+    return render_template('employee/index.html', title='Employees', employees=employees)
+
+
 @employee.route("/new", methods=['GET', 'POST'])
 def new():
     form = EmployeeForm()
