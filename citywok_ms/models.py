@@ -3,6 +3,7 @@ from citywok_ms.utils import SEX, ID
 from sqlalchemy import Column, String, Integer, ForeignKey, CheckConstraint, Date, Text, Boolean, Numeric
 from sqlalchemy.orm import relationship, validates
 from sqlalchemy.types import TypeDecorator
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy_utils import ChoiceType, CountryType
 from decimal import Decimal
 
@@ -66,6 +67,10 @@ class Employee(db.Model):
 
     def __repr__(self):
         return f'Employee({self.id}: {self.first_name} {self.last_name})'
+
+    @hybrid_property
+    def full_name(self):
+        return f'{self.first_name} {self.last_name}'
 
     @validates('sex')
     def validate_sex(self, key, sex):
