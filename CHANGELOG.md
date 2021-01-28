@@ -5,12 +5,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.2.0] - 2021-01-28
 ### Added
 - Bootstrap Icon
-- Detail View of employee Module - ***/employee/<employee_id>*** and corresponding tests
-- `full_name` property in Employee Model
-- New tests of the index View
-- Index View of employee Module to show all employees - ***/employee***
+- Employee Module
+  - Detail View of employee Module - ***/employee/<employee_id>***
+  - Index View of employee Module to show all employees - ***/employee***
+  - Tests of the Index and Detail View
+  - `full_name` property in Employee Model
 
 ### Changed
 - Improve `zh_name` Field in EmployeeForm 
