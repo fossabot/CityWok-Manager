@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improve `zh_name` Field in EmployeeForm 
 
 ### Fixed
+- Chinese Name not showing by using `chinese_name` instead `zh_name`
 - Missing `nullable=False` in Employee model
 - Typo in EmployeeForm
 
