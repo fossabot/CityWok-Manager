@@ -21,6 +21,7 @@
                     <th scope="col">Sex</th>
                     <th scope="col">NIF</th>
                     <th scope="col">NISS</th>
+                    <th scope="col">Detail</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,6 +36,8 @@
                     <td>{{ employee.sex }}</td>
                     <td>{{ employee.nif or '-'}}</td>
                     <td>{{ employee.niss or '-'}}</td>
+                    <td><a href="{{url_for('employee.detail',employee_id=employee.id)}}"><i
+                                class="bi bi-three-dots-vertical"></i></a></td>
                 </tr>
                 {% endfor %}
             </tbody>
