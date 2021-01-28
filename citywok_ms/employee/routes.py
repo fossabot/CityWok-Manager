@@ -24,3 +24,9 @@ def new():
         flash('Successfully added new employee', 'success')
         return redirect(url_for('employee.index'))
     return render_template('employee/new.html', title='New Employee', form=form)
+
+
+@employee.route("/<int:employee_id>")
+def detail(employee_id):
+    employee = Employee.query.get_or_404(employee_id)
+    return render_template('employee/detail.html', title='Employee Detail', employee=employee)

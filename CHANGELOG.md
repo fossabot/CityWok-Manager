@@ -6,12 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- full_name property in Employee Model
+- Detail View of employee Module - ***/employee/<employee_id>*** and corresponding tests
+- `full_name` property in Employee Model
 - New tests of the index View
 - Index View of employee Module to show all employees - ***/employee***
 
 ### Changed
-- Improve zh_name Field in EmployeeForm 
+- Improve `zh_name` Field in EmployeeForm 
 
 ### Fixed
 - Missing `nullable=False` in Employee model

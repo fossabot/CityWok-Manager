@@ -1,0 +1,59 @@
+{% extends 'layout.html' %}
+{% set active_page = "employee" %}
+{% block content %}
+<div class="mx-2 mx-md-5 mb-5">
+    <!-- title -->
+    <div class="row">
+        <div class="col-md">
+            <h1>{{title}}</h1>
+            {% if not employee.active %}
+            <small class="text-warning">已被删除员工</small>
+            {% endif %}
+        </div>
+    </div>
+    <hr>
+    <!-- information form -->
+    <dl class="row">
+        <dt class="col-lg-4">ID:</dt>
+        <dd class="col-lg-8">{{ employee.id }}</dd>
+        <dt class="col-lg-4">姓名:</dt>
+        <dd class="col-lg-8">{{ employee.full_name }}</dd>
+        <dt class="col-lg-4">中文名:</dt>
+        <dd class="col-lg-8">{{ employee.zh_name or '-'}}</dd>
+        <dt class="col-lg-4">性别:</dt>
+        <dd class="col-lg-8">{{ employee.sex }}</dd>
+        <dt class="col-lg-4">生日:</dt>
+        <dd class="col-lg-8">{{ employee.birthday or '-'}}</dd>
+        <dt class="col-lg-4">联系电话:</dt>
+        <dd class="col-lg-8">{{ employee.contact or '-'}}</dd>
+        <dt class="col-lg-4">邮箱地址:</dt>
+        <dd class="col-lg-8">{{ employee.email or '-'}}</dd>
+    </dl>
+    <dl class="row">
+        <dt class="col-lg-4">证件类型:</dt>
+        <dd class="col-lg-8">{{ employee.id_type }}</dd>
+        <dt class="col-lg-4">证件号码:</dt>
+        <dd class="col-lg-8">{{ employee.id_number }}</dd>
+        <dt class="col-lg-4">证件有效期:</dt>
+        <dd class="col-lg-8">{{ employee.id_validity }}</dd>
+        <dt class="col-lg-4">国籍:</dt>
+        <dd class="col-lg-8">{{ employee.nationality }}</dd>
+        <dt class="col-lg-4">NIF:</dt>
+        <dd class="col-lg-8">{{ employee.nif or '-'}}</dd>
+        <dt class="col-lg-4">NISS:</dt>
+        <dd class="col-lg-8">{{ employee.niss or '-'}}</dd>
+    </dl>
+    <dl class="row">
+        <dt class="col-lg-4">就职日期:</dt>
+        <dd class="col-lg-8">{{ employee.start_date or '-'}}</dd>
+        <dt class="col-lg-4">工资:</dt>
+        <dd class="col-lg-8">{{ employee.total_salary }}</dd>
+        <dt class="col-lg-4">报税金额:</dt>
+        <dd class="col-lg-8">{{ employee.taxed_salary }}</dd>
+    </dl>
+    <dl class="row">
+        <dt class="col-lg-4">备注:</dt>
+        <dd class="col-lg-8">{{ employee.remark or '-'}}</dd>
+    </dl>
+</div>
+{% endblock content %}
