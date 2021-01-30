@@ -23,18 +23,18 @@
     <title>{{ title }} - CityWok Manager</title>
 </head>
 
-{# {% set navbar = [
-('/', 'home', '首页'),
-(url_for('employee.index'), 'employee', '员工管理'),
-(url_for('supplier.index'),'supplier','供应商管理'),
-(url_for('registry.index'),'registry','登记处')
-] -%} #}
+{% set navbar = [
+('#','home','Home'),
+(url_for('employee.index'), 'employee', 'Employee')
+] -%}
+
+{# ('#', 'supplier','Supplier'),
+('#', 'registry','Registry') #}
 
 <body>
     <header>
         <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-            <a class="navbar-brand">CityWok Manger</a>
-            {#<button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse"
+            <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse"
                 data-target="#collapsibleNavId" aria-controls="collapsibleNavId" aria-expanded="false"
                 aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -49,7 +49,7 @@
                         href="{{ href }}">{{ caption }}</a>
                     {% endfor %}
                     </li>
-                    <li class="nav-item dropdown">
+                    {#<li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">Dropdown</a>
                         <div class="dropdown-menu  bg-light" aria-labelledby="dropdownId">
@@ -60,7 +60,7 @@
                 </ul>
 
                 <!-- navbar-right -->
-                <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+                {# <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
                     {% if current_user.is_authenticated %}
                     <li class="nav-item dropdown mr-2">
                         <a {% if active_page=='account' %} class="nav-link active dropdown-toggle" {% else %}
@@ -77,8 +77,8 @@
                         <a class="btn btn-danger" href="{{ url_for('user.logout') }}">登出</a>
                     </li>
                     {% endif %}
-                </ul>
-            </div> #}
+                </ul>#}
+            </div>
         </nav>
     </header>
 
