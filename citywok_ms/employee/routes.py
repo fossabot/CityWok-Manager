@@ -9,8 +9,12 @@ employee = Blueprint('employee', __name__, url_prefix="/employee")
 
 @employee.route("/")
 def index():
-    employees = db.session.query(Employee).all()
-    return render_template('employee/index.html', title='Employees', employees=employees)
+    employees = db.session.query(Employee).filter_by(active=True).all()
+    i_employees = db.session.query(Employee).filter_by(active=False).all()
+    return render_template('employee/index.html',
+                           title='Employees',
+                           employees=employees,
+                           i_employees=i_employees)
 
 
 @employee.route("/new", methods=['GET', 'POST'])

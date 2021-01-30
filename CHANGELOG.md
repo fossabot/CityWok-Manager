@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.3.0] - 2021-01-30 
 ### Added
 - enable CSRF protection
 - Employee Module
@@ -15,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Updated
 - ***layout.html*** to provide access to different views
+- Separate active/inactive employee to 2 tables in employee/index
 
 ## [0.2.0] - 2021-01-28
 ### Added
