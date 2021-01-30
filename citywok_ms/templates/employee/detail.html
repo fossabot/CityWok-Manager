@@ -7,12 +7,27 @@
         <div class="col-md">
             <h1>{{title}}</h1>
             {% if not employee.active %}
-            <small class="text-warning">已被删除员工</small>
+            <p class="text-warning mb-2">Inactive</p>
             {% endif %}
         </div>
     </div>
+    <div class="row-md d-print-none">
+        <a href="{{url_for('employee.update',employee_id=employee.id)}}" class="btn btn-info pr-2"
+            id="update_button">Update</a>
+        {% if employee.active %}
+        <form action="{{url_for('employee.inactivate',employee_id=employee.id)}}" method="post" class="d-inline">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="submit" value="Inactivate" class="btn btn-danger">
+        </form>
+        {% else %}
+        <form action="{{url_for('employee.activate',employee_id=employee.id)}}" method="post" class="d-inline">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="submit" value="Activate" class="btn btn-success">
+        </form>
+        {% endif %}
+    </div>
     <hr>
-    <!-- information form -->
+    <!-- informations -->
     <dl class="row">
         <dt class="col-lg-4">ID:</dt>
         <dd class="col-lg-8">{{ employee.id }}</dd>

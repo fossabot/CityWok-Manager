@@ -30,3 +30,40 @@ def new():
 def detail(employee_id):
     employee = Employee.query.get_or_404(employee_id)
     return render_template('employee/detail.html', title='Employee Detail', employee=employee)
+
+
+@employee.route("/<int:employee_id>/update", methods=['GET', 'POST'])
+def update(employee_id):
+    employee = Employee.query.get_or_404(employee_id)
+    form = EmployeeForm()
+    form.hide_id.data = employee_id
+    if form.validate_on_submit():
+        form.populate_obj(employee)
+        db.session.commit()
+        flash('Employee information has been updated', 'success')
+        return redirect(url_for('employee.detail', employee_id=employee_id))
+
+    form.process(obj=employee)
+
+    return render_template('employee/update.html',
+                           employee=employee,
+                           form=form,
+                           title='Update employee information')
+
+
+@employee.route("/<int:employee_id>/inactivate", methods=['POST'])
+def inactivate(employee_id):
+    employee = Employee.query.get_or_404(employee_id)
+    employee.active = False
+    db.session.commit()
+    flash('Employee has been inactivated', 'success')
+    return redirect(url_for('employee.detail', employee_id=employee_id))
+
+
+@employee.route("/<int:employee_id>/activate", methods=['POST'])
+def activate(employee_id):
+    employee = Employee.query.get_or_404(employee_id)
+    employee.active = True
+    db.session.commit()
+    flash('Employee has been activated', 'success')
+    return redirect(url_for('employee.detail', employee_id=employee_id))

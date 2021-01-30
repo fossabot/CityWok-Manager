@@ -44,6 +44,18 @@ def test_employees():
                   nationality='PT',
                   total_salary='1500',
                   taxed_salary='635.00')
-
     db.session.add(e2)
+
+    e3 = Employee(first_name='TEST_3',
+                  last_name='INFO',
+                  sex='F',
+                  id_type='passport',
+                  id_number='123',
+                  id_validity=date(2100, 1, 1),
+                  nationality='BR',
+                  total_salary='1000',
+                  taxed_salary='635.00',
+                  active=False)
+    db.session.add(e3)
+
     db.session.commit()

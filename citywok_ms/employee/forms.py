@@ -10,6 +10,7 @@ from wtforms.fields.html5 import (DateField, DecimalField, EmailField,
 from wtforms.validators import (Email, InputRequired, NumberRange, Optional,
                                 ValidationError)
 from wtforms_alchemy import QuerySelectField
+from wtforms_alchemy.utils import choice_type_coerce_factory
 from wtforms_components import SelectField
 
 
@@ -24,6 +25,8 @@ class EmployeeForm(FlaskForm):
                           validators=[Optional()])
     sex = BlankSelectField(label='Sex',
                            choices=SEX,
+                           coerce=choice_type_coerce_factory(
+                               Employee.sex.type),
                            message='---',
                            validators=[InputRequired()])
     birthday = DateField(label='Birthday',
@@ -39,6 +42,8 @@ class EmployeeForm(FlaskForm):
     id_type = BlankSelectField(label='ID Type',
                                validators=[InputRequired()],
                                choices=ID,
+                               coerce=choice_type_coerce_factory(
+                                   Employee.id_type.type),
                                message='---')
     id_number = StringField(label='ID Number',
                             validators=[InputRequired()])
@@ -66,6 +71,7 @@ class EmployeeForm(FlaskForm):
                            filters=[lambda x: x or None])
 
     submit = SubmitField(label='Add')
+    update = SubmitField(label='Update')
 
     def validate_id_validity(self, id_validity):
         if (self.id_validity.data and self.id_validity.data < date.today()):

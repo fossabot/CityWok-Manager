@@ -3,9 +3,11 @@ from flask import Flask, current_app, request
 from flask_babel import Babel
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_utils import i18n
+from flask_wtf.csrf import CSRFProtect
 
 from citywok_ms.config import Config
 
+csrf = CSRFProtect()
 db = SQLAlchemy()
 babel = Babel()
 
@@ -18,6 +20,7 @@ def create_app(config_class=Config):
 
     # init extensions
     db.init_app(app)
+    csrf.init_app(app)
     babel.init_app(app)
 
     with app.app_context():
