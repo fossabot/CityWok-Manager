@@ -52,7 +52,7 @@ def update(employee_id):
     return render_template('employee/update.html',
                            employee=employee,
                            form=form,
-                           title='Update employee information')
+                           title='Update employee')
 
 
 @employee.route("/<int:employee_id>/inactivate", methods=['POST'])

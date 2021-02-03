@@ -30,8 +30,7 @@ class EmployeeForm(FlaskForm):
                            message='---',
                            validators=[InputRequired()])
     birthday = DateField(label='Birthday',
-                         validators=[Optional()],
-                         render_kw={'type': 'date'})
+                         validators=[Optional()])
     contact = TelField(label='Contact',
                        validators=[Optional()],
                        filters=[lambda x: x or None])

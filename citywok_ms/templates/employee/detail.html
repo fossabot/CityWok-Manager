@@ -3,16 +3,14 @@
 {% block content %}
 <div class="mx-2 mx-md-5 mb-5">
     <!-- title -->
-    <div class="row">
-        <div class="col-md">
-            <h1>{{title}}</h1>
-            {% if not employee.active %}
-            <p class="text-warning mb-2">Inactive</p>
-            {% endif %}
-        </div>
-    </div>
+
+    <h1>{{title}}</h1>
+    {% if not employee.active %}
+    <p class="text-warning mb-2">Inactive</p>
+    {% endif %}
+
     <div class="row-md d-print-none">
-        <a href="{{url_for('employee.update',employee_id=employee.id)}}" class="btn btn-info pr-2"
+        <a href="{{url_for('employee.update',employee_id=employee.id)}}" class="btn btn-info"
             id="update_button">Update</a>
         {% if employee.active %}
         <form action="{{url_for('employee.inactivate',employee_id=employee.id)}}" method="post" class="d-inline">
