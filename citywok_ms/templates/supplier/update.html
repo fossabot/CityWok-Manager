@@ -1,0 +1,84 @@
+{% extends 'layout.html' %}
+{% set active_page = "supplier" %}
+{% block content %}
+<div class="mx-2 mx-md-5 mb-5">
+    <h1>{{title}}</h1>
+    <hr class="mb-4">
+    <form action="" method="post" id="employee_form" class="px-3" novalidate>
+        {{ form.hidden_tag() }}
+        <fieldset>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    {% with field=form.name %}
+                    {% include 'field.html' %}
+                    {% endwith %}
+                </div>
+                <div class="form-group col-md-6">
+                    {% with field=form.principal %}
+                    {% include 'field.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    {% with field=form.abbreviation %}
+                    {% include 'field.html' %}
+                    {% endwith %}
+                </div>
+                <div class="form-group col-md-6">
+                    {% with field=form.nif %}
+                    {% include 'field.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    {% with field=form.iban %}
+                    {% include 'field.html' %}
+                    {% endwith %}
+                </div>
+                <div class="form-group col-md-6">
+                    {% with field=form.contact %}
+                    {% include 'field.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    {% with field=form.email %}
+                    {% include 'field.html' %}
+                    {% endwith %}
+                </div>
+                <div class="form-group col-md-6">
+                    {% with field=form.address %}
+                    {% include 'field.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    {% with field=form.postcode %}
+                    {% include 'field.html' %}
+                    {% endwith %}
+                </div>
+                <div class="form-group col-md-6">
+                    {% with field=form.city %}
+                    {% include 'field.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-12">
+                    {% with field=form.remark %}
+                    {% include 'field.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+            <!-- Submit Button -->
+            <div class="form-group">
+                {{ form.update(class="btn btn-info col-12") }}
+            </div>
+        </fieldset>
+    </form>
+</div>
+{% endblock content %}

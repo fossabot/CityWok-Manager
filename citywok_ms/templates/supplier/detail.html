@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+{% set active_page = "supplier" %}
+{% block content %}
+<div class="mx-2 mx-md-5 mb-5">
+    <!-- title -->
+    <h1>{{title}}</h1>
+    <div class="row-md d-print-none">
+        <a href="{{url_for('supplier.update',supplier_id=supplier.id)}}" class="btn btn-info d-print-none"
+            id="update_button">Update</a>
+    </div>
+    <hr>
+    <!-- information -->
+    <dl class="row">
+        <dt class="col-4">ID:</dt>
+        <dd class="col-8">{{ supplier.id }}</dd>
+        <dt class="col-4">Company Name:</dt>
+        <dd class="col-8">{{ supplier.name }}</dd>
+        <dt class="col-4">Abbreviation:</dt>
+        <dd class="col-8">{{ supplier.abbreviation or '-' }}</dd>
+        <dt class="col-4">Principal:</dt>
+        <dd class="col-8">{{ supplier.principal or '-'}}</dd>
+        <dt class="col-4">Contact:</dt>
+        <dd class="col-8">{{ supplier.contact or '-'}}</dd>
+        <dt class="col-4">E-mail:</dt>
+        <dd class="col-8">{{ supplier.email or '-'}}</dd>
+    </dl>
+    <dl class="row">
+        <dt class="col-4">NIF:</dt>
+        <dd class="col-8">{{ supplier.nif or '-'}}</dd>
+        <dt class="col-4">IBAN:</dt>
+        <dd class="col-8">{{ supplier.iban or '-'}}</dd>
+        <dt class="col-4">Address:</dt>
+        <dd class="col-8">{{ supplier.address or '-'}}</dd>
+        <dt class="col-4">Postcode:</dt>
+        <dd class="col-8">{{ supplier.postcode or '-'}}</dd>
+        <dt class="col-4">City:</dt>
+        <dd class="col-8">{{ supplier.city or '-'}}</dd>
+        <dt class="col-4">Remark:</dt>
+        <dd class="col-8">{{ supplier.remark or '-'}}</dd>
+    </dl>
+</div>
+{% endblock content %}

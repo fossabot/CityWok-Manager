@@ -26,9 +26,10 @@ def create_app(config_class=Config):
     with app.app_context():
         # imports
         from citywok_ms.employee.routes import employee
-
+        from citywok_ms.supplier.routes import supplier
         # blueprints
         app.register_blueprint(employee)
+        app.register_blueprint(supplier)
 
         return app
 

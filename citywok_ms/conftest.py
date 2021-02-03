@@ -1,7 +1,7 @@
 import pytest
 
 from citywok_ms import create_app, db
-from citywok_ms.models import Employee
+from citywok_ms.models import Employee, Supplier
 from datetime import date
 
 
@@ -64,3 +64,15 @@ def test_employees():
     db.create_all()
 
 
+@pytest.fixture(scope="function")
+def test_suppliers():
+    s1 = Supplier(name="TEST_1",
+                  principal="P_1")
+    db.session.add(s1)
+    s2 = Supplier(name="TEST_2",
+                  principal="P_2")
+    db.session.add(s2)
+    db.session.commit()
+    yield
+    db.session.query(Supplier).delete()
+    db.session.commit()

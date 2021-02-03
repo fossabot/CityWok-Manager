@@ -5,6 +5,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.4.0] - 2021-02-03
+### Added
+- Supplier Module
+  - Supplier Model and Form
+  - Views:
+    - Create new supplier - ***supplier/new***
+    - Display all suppliers - ***supplier/index***
+    - Detail info of supplier - ***supplier/<supplier_id>***
+    - Update supplier info - ***supplier/<suppplier_id>/update***
+- Test Module
+  - Tests for Supplier
+
 ### Changed
 - Restructure the Test Module
 - Minor changes
