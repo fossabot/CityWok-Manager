@@ -5,7 +5,7 @@ from citywok_ms.models import Employee
 from datetime import date
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='class')
 def test_client():
     flask_app = create_app()
 
@@ -22,7 +22,7 @@ def test_client():
             db.drop_all()
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='function')
 def test_employees():
     e1 = Employee(first_name='TEST_1',
                   last_name='INFO',
@@ -59,3 +59,8 @@ def test_employees():
     db.session.add(e3)
 
     db.session.commit()
+    yield
+    db.drop_all()
+    db.create_all()
+
+
