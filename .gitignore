@@ -1,3 +1,4 @@
 env
 __pycache__
-*.db
+.pytest_cache
+instance

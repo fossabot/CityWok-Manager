@@ -5,17 +5,33 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_utils import i18n
 from flask_wtf.csrf import CSRFProtect
 
-from citywok_ms.config import Config
+import os
+
 
 csrf = CSRFProtect()
 db = SQLAlchemy()
 babel = Babel()
 
 
-def create_app(config_class=Config):
+def create_app():
     # create the app instance
-    app = Flask(__name__)
-    app.config.from_object(config_class)
+    app = Flask(__name__, instance_relative_config=True)
+
+    # default
+    app.config.from_mapping(
+        SECRET_KEY='dev',
+        SQLALCHEMY_DATABASE_URI=f'sqlite:///{os.path.join(app.instance_path,"database.db")}',
+        SQLALCHEMY_TRACK_MODIFICATIONS=False,
+        LANGUAGES=['en'],
+        FLASK_ENV='development',
+        UPLOAD_FOLDER=os.path.join(app.instance_path, 'uploads')
+    )
+
+    os.makedirs(app.instance_path, exist_ok=True)
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+    app.config.from_pyfile('config.py')
+
     i18n.get_locale = flask_babel.get_locale
 
     # init extensions

@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Use CDN for JS and CSS instead of local files
 - From Bootstrap Icons to Material Icons
+- Restructure the config process of flask
 
 ## [0.4.0] - 2021-02-03
 ### Added
