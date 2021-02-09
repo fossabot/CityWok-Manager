@@ -1,3 +1,38 @@
+main {
+  padding-top: 60px;
+}
+
+.table th, .table td {
+  vertical-align: middle !important;
+}
+.row{
+  margin-left: 0;
+  margin-right: 0;
+}
+.material-icons {
+  vertical-align: middle;
+
+}
+
+.material-icons.icon-btn {
+  cursor: pointer;
+  color: #007bff;
+  text-decoration: none;
+  background-color: transparent;
+}
+.material-icons.icon-btn:hover{
+  color: #0056b3;
+}
+
+.material-icons.info {
+  color: #17a2b8;
+}
+
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
 .sansserif {
     font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
   }

@@ -1,6 +1,9 @@
+import io
+import os
+
 from citywok_ms import db
-from citywok_ms.models import Employee
-from flask import request
+from citywok_ms.models import Employee, File
+from flask import request, current_app
 
 
 class TestNew:
@@ -342,11 +345,15 @@ class TestDetail:
         assert response.status_code == 200
         assert b'TEST_1 INFO' in response.data
         assert b'Employee Detail' in response.data
+        assert b'Files' in response.data
+        assert b'New' in response.data
 
         response = test_client.get('/employee/2')
         assert response.status_code == 200
         assert b'TEST_2 INFO' in response.data
         assert b'Employee Detail' in response.data
+        assert b'Files' in response.data
+        assert b'New' in response.data
 
     def test_get_invalide(self, test_client, test_employees):
         response = test_client.get('/employee/101')
@@ -359,6 +366,10 @@ class TestDetail:
         assert b'employee/1/inactivate' in response.data
         assert b'employee/1/activate' not in response.data
         assert b'Inactive' not in response.data
+
+        assert b'New File' in response.data
+        assert b'Show deleted files' in response.data
+        assert b'Deleted Files' in response.data
 
     def test_inactivate_btns(self, test_client, test_employees):
         response = test_client.get('/employee/3')
@@ -423,3 +434,33 @@ class TestOperation:
         assert 'Employee has been activated' in response.data.decode(
             'utf-8')
         assert db.session.query(Employee).get(1).active == True
+
+
+class TestUpload:
+    def test_get(self, test_client, test_employees):
+        response = test_client.get('/employee/1/upload')
+        assert response.status_code == 405
+
+    def test_invalid_post(self, test_client, test_employees):
+        data = dict(
+            file=(io.BytesIO(b'test'), "test.exe"),
+        )
+        response = test_client.post('/employee/1/upload',
+                                    data=data,
+                                    follow_redirects=True,
+                                    content_type='multipart/form-data')
+        assert response.status_code == 200
+        assert 'Invalid File Format:' in response.data.decode('utf-8')
+
+    def test_valid_post(self, test_client, test_employees):
+        data = dict(
+            file=(io.BytesIO(b'test'), "test_upload.pdf"),
+        )
+        response = test_client.post('/employee/1/upload',
+                                    data=data,
+                                    follow_redirects=True,
+                                    content_type='multipart/form-data')
+        assert response.status_code == 200
+        f = db.session.query(File).get(1)
+        assert f.full_name == "test_upload.pdf"
+        assert os.path.isfile(f.file_path) == 1

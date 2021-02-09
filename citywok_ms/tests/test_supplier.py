@@ -1,6 +1,7 @@
-from re import S
+import io
+import os
 from citywok_ms import db
-from citywok_ms.models import Supplier
+from citywok_ms.models import Supplier, File
 from flask import request
 
 
@@ -157,3 +158,33 @@ class TestUpdate:
         assert db.session.query(Supplier).get(1).name == 'UPDATE_INFO'
         assert 'Supplier information has been updated' in response.data.decode(
             'utf-8')
+
+
+class TestUpload:
+    def test_get(self, test_client, test_suppliers):
+        response = test_client.get('/supplier/1/upload')
+        assert response.status_code == 405
+
+    def test_invalid_post(self, test_client, test_suppliers):
+        data = dict(
+            file=(io.BytesIO(b'test'), "test.exe"),
+        )
+        response = test_client.post('/supplier/1/upload',
+                                    data=data,
+                                    follow_redirects=True,
+                                    content_type='multipart/form-data')
+        assert response.status_code == 200
+        assert 'Invalid File Format:' in response.data.decode('utf-8')
+
+    def test_valid_post(self, test_client, test_suppliers):
+        data = dict(
+            file=(io.BytesIO(b'test'), "test_upload.pdf"),
+        )
+        response = test_client.post('/supplier/1/upload',
+                                    data=data,
+                                    follow_redirects=True,
+                                    content_type='multipart/form-data')
+        assert response.status_code == 200
+        f = db.session.query(File).get(1)
+        assert f.full_name == "test_upload.pdf"
+        assert os.path.isfile(f.file_path) == 1

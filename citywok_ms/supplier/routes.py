@@ -1,6 +1,7 @@
 from flask import Blueprint, flash, redirect, render_template, url_for
-from citywok_ms.models import Supplier
+from citywok_ms.models import Supplier, SupplierFile, File
 from citywok_ms.supplier.forms import SupplierForm
+from citywok_ms.file.forms import FileForm
 from citywok_ms import db
 
 supplier = Blueprint('supplier', __name__, url_prefix="/supplier")
@@ -30,7 +31,10 @@ def new():
 @supplier.route("/<int:supplier_id>")
 def detail(supplier_id):
     supplier = Supplier.query.get_or_404(supplier_id)
-    return render_template('supplier/detail.html', title='Supplier Detail', supplier=supplier)
+    return render_template('supplier/detail.html',
+                           title='Supplier Detail',
+                           supplier=supplier,
+                           file_form=FileForm())
 
 
 @supplier.route("/<int:supplier_id>/update", methods=['GET', 'POST'])
@@ -50,3 +54,16 @@ def update(supplier_id):
                            supplier=supplier,
                            form=form,
                            title='Update supplier')
+
+
+@supplier.route("/<int:supplier_id>/upload", methods=['POST'])
+def upload(supplier_id):
+    form = FileForm()
+    file = form.file.data
+    if form.validate_on_submit():
+        SupplierFile.save_file(file=file, supplier_id=supplier_id)
+        flash('File has been submited', 'success')
+    else:
+        flash(
+            f'Invalid File Format: "{File.split_ext(file)}"', 'danger')
+    return redirect(url_for('supplier.detail', supplier_id=supplier_id))

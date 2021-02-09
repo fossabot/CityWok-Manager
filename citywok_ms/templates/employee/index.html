@@ -1,15 +1,14 @@
 {% extends 'layout.html' %}
 {% set active_page = "employee" %}
 {% block content %}
-<div class="mx-2 mx-md-5 mb-5">
+<div>
     <h1>{{title}}</h1>
-    <hr class="mb-4">
+    <hr>
     <h3>Active Employees</h3>
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <a href="{{url_for('employee.new')}}" class="btn btn-success my-auto px-4 mr-auto">New</a>
-        </div>
+    <div class="mb-2 d-print-none">
+        <a href="{{url_for('employee.new')}}" class="btn btn-success">New</a>
     </div>
+    {% if employees %}
     <div class="table-responsive">
         <table class="table table-striped table-bordered text-nowrap text-center">
             <thead class="thead-dark">
@@ -30,21 +29,23 @@
                     <th>
                         <strong>{{ employee.id }}</strong>
                     </th>
-                    <td>{{ employee.first_name }}</td>
+                    <td class='align-middle'>{{ employee.first_name }}</td>
                     <td>{{ employee.last_name }}</td>
                     <td>{{ employee.zh_name or '-'}}</td>
                     <td>{{ employee.sex }}</td>
                     <td>{{ employee.nif or '-'}}</td>
                     <td>{{ employee.niss or '-'}}</td>
-                    <td><a href="{{url_for('employee.detail',employee_id=employee.id)}}"><i
-                                class="bi bi-three-dots-vertical"></i></a></td>
+                    <td><a href="{{url_for('employee.detail',employee_id=employee.id)}}"><span class="material-icons">
+                                more_vert
+                            </span></a></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+    {% endif %}
     {% if i_employees %}
-    <hr class="mb-4">
+    <hr>
     <h3>Inactive Employees</h3>
     <div class="table-responsive">
         <table class="table table-striped table-bordered text-nowrap text-center">
@@ -72,8 +73,9 @@
                     <td>{{ employee.sex }}</td>
                     <td>{{ employee.nif or '-'}}</td>
                     <td>{{ employee.niss or '-'}}</td>
-                    <td><a href="{{url_for('employee.detail',employee_id=employee.id)}}"><i
-                                class="bi bi-three-dots-vertical"></i></a></td>
+                    <td><a href="{{url_for('employee.detail',employee_id=employee.id)}}"><span class="material-icons">
+                                more_vert
+                            </span></a></td>
                 </tr>
                 {% endfor %}
             </tbody>

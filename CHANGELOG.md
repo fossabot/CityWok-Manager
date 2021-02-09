@@ -5,10 +5,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.5.0] - 2021-02-09
+### Added
+- Flask extensions
+  - Flask-Moment
+- Custom CSS
+- Employee Module
+  - Functionality to upload files - ***employee/<employee_id>/upload***
+- Supplier Module
+  - Functionality to upload files - ***supplier/<employee_id>/upload***
+- File Module
+  - Database model and forms
+- Test Module
+  - Tests for new functions
+  - coverage.py(pytest-cov) for test coverage
+  - .converagerc for coverage configuration
+
 ### Changed
 - Use CDN for JS and CSS instead of local files
 - From Bootstrap Icons to Material Icons
 - Restructure the config process of flask
+- Minor HTML changes
 
 ## [0.4.0] - 2021-02-03
 ### Added

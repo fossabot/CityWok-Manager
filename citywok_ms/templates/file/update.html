@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div>
+    <!-- title -->
+    <h1>{{title}}</h1>
+    <hr>
+    <form action="" method="post" id="employee_form" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="form-row justify-content-center">
+            <div class="form-group col-sm-6">
+                {{ form.file_name.label (class="font-weight-bold") }}
+                <div class="input-group">
+                    {% if form.file_name.errors %}
+                    {{ field(class="form-control is-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error in form.file_name.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.file_name(class="form-control") }}
+                    {% endif %}
+                    <div class="input-group-append">
+                        <span class="input-group-text">{{file.file_extension}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row justify-content-center">
+            <div class="form-group col-sm-6">
+                {% with field=form.remark %}
+                {% include 'field.html' %}
+                {% endwith %}
+            </div>
+        </div>
+        <div class="form-row justify-content-center">
+            <div class="form-group col-sm-6">
+                {{ form.update(class="btn btn-info float-right") }}
+            </div>
+        </div>
+</div>
+{% endblock content %}
