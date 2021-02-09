@@ -1,6 +1,7 @@
 from citywok_ms import db
-from citywok_ms.models import Employee
+from citywok_ms.models import Employee, EmployeeFile, File
 from citywok_ms.employee.forms import EmployeeForm
+from citywok_ms.file.forms import FileForm
 from flask import Blueprint, flash, redirect, render_template, url_for
 
 
@@ -27,18 +28,23 @@ def new():
         db.session.commit()
         flash('Successfully added new employee', 'success')
         return redirect(url_for('employee.index'))
-    return render_template('employee/new.html', title='New Employee', form=form)
+    return render_template('employee/new.html',
+                           title='New Employee',
+                           form=form)
 
 
 @employee.route("/<int:employee_id>")
 def detail(employee_id):
-    employee = Employee.query.get_or_404(employee_id)
-    return render_template('employee/detail.html', title='Employee Detail', employee=employee)
+
+    return render_template('employee/detail.html',
+                           title='Employee Detail',
+                           employee=Employee.query.get_or_404(employee_id),
+                           file_form=FileForm())
 
 
 @employee.route("/<int:employee_id>/update", methods=['GET', 'POST'])
 def update(employee_id):
-    employee = Employee.query.get_or_404(employee_id)
+    employee = db.session.query(Employee).get_or_404(employee_id)
     form = EmployeeForm()
     form.hide_id.data = employee_id
     if form.validate_on_submit():
@@ -57,7 +63,7 @@ def update(employee_id):
 
 @employee.route("/<int:employee_id>/inactivate", methods=['POST'])
 def inactivate(employee_id):
-    employee = Employee.query.get_or_404(employee_id)
+    employee = db.session.query(Employee).get_or_404(employee_id)
     employee.active = False
     db.session.commit()
     flash('Employee has been inactivated', 'success')
@@ -66,8 +72,21 @@ def inactivate(employee_id):
 
 @employee.route("/<int:employee_id>/activate", methods=['POST'])
 def activate(employee_id):
-    employee = Employee.query.get_or_404(employee_id)
+    employee = db.session.query(Employee).get_or_404(employee_id)
     employee.active = True
     db.session.commit()
     flash('Employee has been activated', 'success')
+    return redirect(url_for('employee.detail', employee_id=employee_id))
+
+
+@employee.route("/<int:employee_id>/upload", methods=['POST'])
+def upload(employee_id):
+    form = FileForm()
+    file = form.file.data
+    if form.validate_on_submit():
+        EmployeeFile.save_file(file=file, employee_id=employee_id)
+        flash('File has been submited', 'success')
+    else:
+        flash(
+            f'Invalid File Format: "{File.split_ext(file)}"', 'danger')
     return redirect(url_for('employee.detail', employee_id=employee_id))

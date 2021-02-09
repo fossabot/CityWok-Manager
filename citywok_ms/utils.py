@@ -11,6 +11,12 @@ ID = [('passport', 'Passport'),
       ('residence_permit', 'Residence Permit'),
       ('other', 'Other')]
 
+FILEALLOWED = tuple(
+    '''txt jpg jpe jpeg png gif svg bmp rtf
+    odf ods gnumeric abw doc docx xls xlsx
+    csv ini json plist xml yaml yml gz bz2
+    zip tar tgz txz 7z pdf'''.split())
+
 
 @total_ordering
 @str_coercible
@@ -30,6 +36,3 @@ class BlankCountry(Country):
                     'Could not convert string to country code: {0}'.format(
                         code)
                 )
-        except AttributeError:
-            # As babel is optional, we may raise an AttributeError accessing it
-            pass
