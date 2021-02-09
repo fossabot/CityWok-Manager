@@ -15,6 +15,9 @@ from wtforms_components import SelectField
 
 
 class EmployeeForm(FlaskForm):
+    """
+    Form to create or update Employee
+    """
     hide_id = HiddenField()
     first_name = StringField(label='First Name',
                              validators=[InputRequired()])
@@ -73,15 +76,24 @@ class EmployeeForm(FlaskForm):
     update = SubmitField(label='Update')
 
     def validate_id_validity(self, id_validity):
+        """
+        Validate the id_validity field, check if it's still valid
+        """
         if (self.id_validity.data and self.id_validity.data < date.today()):
             raise ValidationError('ID has expired')
 
     def validate_nif(self, nif):
+        '''
+        Validate the nif field, to avoid duplicate nif number
+        '''
         e = Employee.query.filter_by(nif=nif.data).first()
         if nif.data and e and (e.id != self.hide_id.data):
             raise ValidationError('This NIF already existe')
 
     def validate_niss(self, niss):
+        '''
+        Validate the niss field, to avoid duplicate niss number
+        '''
         e = Employee.query.filter_by(niss=niss.data).first()
         if niss.data and e and (e.id != self.hide_id.data):
             raise ValidationError('This NISS already existe')

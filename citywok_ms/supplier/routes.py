@@ -9,6 +9,9 @@ supplier = Blueprint('supplier', __name__, url_prefix="/supplier")
 
 @supplier.route("/")
 def index():
+    '''
+    View to show a resumo of all suppliers
+    '''
     suppliers = db.session.query(Supplier).all()
     return render_template('supplier/index.html',
                            title='Suppliers',
@@ -17,12 +20,12 @@ def index():
 
 @supplier.route("/new", methods=['GET', 'POST'])
 def new():
+    '''
+    View to create a new supplier
+    '''
     form = SupplierForm()
     if form.validate_on_submit():
-        supplier = Supplier()
-        form.populate_obj(supplier)
-        db.session.add(supplier)
-        db.session.commit()
+        Supplier.new(form)
         flash('Successfully added new supplier', 'success')
         return redirect(url_for('supplier.index'))
     return render_template('supplier/new.html', title='New Supplier', form=form)
@@ -30,6 +33,9 @@ def new():
 
 @supplier.route("/<int:supplier_id>")
 def detail(supplier_id):
+    '''
+    View to show detail information of a supplier
+    '''
     supplier = Supplier.query.get_or_404(supplier_id)
     return render_template('supplier/detail.html',
                            title='Supplier Detail',
@@ -39,12 +45,14 @@ def detail(supplier_id):
 
 @supplier.route("/<int:supplier_id>/update", methods=['GET', 'POST'])
 def update(supplier_id):
+    '''
+    View to update the information of a supplier
+    '''
     supplier = Supplier.query.get_or_404(supplier_id)
     form = SupplierForm()
     form.hide_id.data = supplier_id
     if form.validate_on_submit():
-        form.populate_obj(supplier)
-        db.session.commit()
+        supplier.update(form)
         flash('Supplier information has been updated', 'success')
         return redirect(url_for('supplier.detail', supplier_id=supplier_id))
 
@@ -58,10 +66,13 @@ def update(supplier_id):
 
 @supplier.route("/<int:supplier_id>/upload", methods=['POST'])
 def upload(supplier_id):
+    '''
+    View to upload a file of a supplier
+    '''
     form = FileForm()
     file = form.file.data
     if form.validate_on_submit():
-        SupplierFile.save_file(file=file, supplier_id=supplier_id)
+        Supplier.save_file(file=file, supplier_id=supplier_id)
         flash('File has been submited', 'success')
     else:
         flash(

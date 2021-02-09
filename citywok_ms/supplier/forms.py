@@ -8,6 +8,9 @@ from wtforms.validators import (Email, InputRequired, NumberRange, Optional,
 
 
 class SupplierForm(FlaskForm):
+    '''
+    Form to create/update Supplier
+    '''
     hide_id = HiddenField()
     name = StringField(label='Company Name',
                        validators=[InputRequired()])
@@ -40,11 +43,17 @@ class SupplierForm(FlaskForm):
     update = SubmitField(label='Update')
 
     def validate_nif(self, nif):
+        '''
+        Validate the nif field, to avoid duplicate nif number
+        '''
         s = Supplier.query.filter_by(nif=nif.data).first()
         if nif.data and s and (s.id != self.hide_id.data):
             raise ValidationError('This NIF already existe')
 
     def validate_iban(self, iban):
+        '''
+        Validate the iban field, to avoid duplicate iban number
+        '''
         s = Supplier.query.filter_by(iban=iban.data).first()
         if iban.data and s and (s.id != self.hide_id.data):
             raise ValidationError('This IBAN already existe')

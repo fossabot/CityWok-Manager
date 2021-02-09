@@ -8,6 +8,10 @@ from citywok_ms.utils import BlankCountry
 
 
 class BlankSelectField(SelectField):
+    '''
+    Modified SelectFiled that allows blank option
+    '''
+
     def __init__(self, message, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.message = message

@@ -80,17 +80,26 @@ class Employee(db.Model):
 
     @property
     def active_files(self):
+        '''
+        All files of the employee that is not in the trash bin
+        '''
         return db.session.query(EmployeeFile).\
             filter_by(employee_id=self.id, delete_date=None).all()
 
     @property
     def deleted_files(self):
+        '''
+        All files of the employee that is in the trash bin
+        '''
         return db.session.query(EmployeeFile).\
             filter(EmployeeFile.employee_id == self.id,
                    EmployeeFile.delete_date != None).all()
 
     @hybrid_property
-    def full_name(self):
+    def full_name(self) -> str:
+        ''' 
+        Employee's full name (first + last name)
+        '''
         return f'{self.first_name} {self.last_name}'
 
     @validates('sex')
@@ -99,6 +108,55 @@ class Employee(db.Model):
             raise ValueError(f'"{sex}" not in SEX set')
         else:
             return sex
+
+    def update(self, form):
+        '''
+        Update the employee information by the given form
+        '''
+        form.populate_obj(self)
+        db.session.commit()
+
+    def activate(self):
+        '''
+        Activate the employee
+
+        set ``self.active`` to ``True``
+        '''
+        self.active = True
+        db.session.commit()
+
+    def inactivate(self):
+        '''
+        Inactivate the employee
+
+        set ``self.active`` to ``False``
+        '''
+        self.active = False
+        db.session.commit()
+
+    @classmethod
+    def new(cls, form):
+        '''
+        Create a new Employee by the information in the given form
+        '''
+        employee = cls()
+        form.populate_obj(employee)
+        db.session.add(employee)
+        db.session.commit()
+
+    @staticmethod
+    def save_file(file: FileStorage, employee_id: int):
+        '''
+        Save a file and associate it to the Employee
+        '''
+        db_file = EmployeeFile(full_name=file.filename,
+                               employee_id=employee_id)
+        db.session.add(db_file)
+        db.session.flush()
+        file.save(os.path.join(
+            current_app.config['UPLOAD_FOLDER'], db_file.internal_name))
+        db_file.size = os.path.getsize(db_file.file_path)
+        db.session.commit()
 
 
 class Supplier(db.Model):
@@ -122,14 +180,51 @@ class Supplier(db.Model):
 
     @property
     def active_files(self):
+        '''
+        All files of the supplier that is not in the trash bin
+        '''
         return db.session.query(SupplierFile).\
             filter_by(supplier_id=self.id, delete_date=None).all()
 
     @property
     def deleted_files(self):
+        '''
+        All files of the supplier that is in the trash bin
+        '''
         return db.session.query(SupplierFile).\
             filter(SupplierFile.supplier_id == self.id,
                    SupplierFile.delete_date != None).all()
+
+    def update(self, form):
+        '''
+        Update the Supplier's information by given form
+        '''
+        form.populate_obj(self)
+        db.session.commit()
+
+    @classmethod
+    def new(cls, form):
+        '''
+        Create a new Supplier by the information in the given form
+        '''
+        supplier = cls()
+        form.populate_obj(supplier)
+        db.session.add(supplier)
+        db.session.commit()
+
+    @staticmethod
+    def save_file(file: FileStorage, supplier_id: int):
+        '''
+        Save a file and associate it to the Supplier
+        '''
+        db_file = SupplierFile(full_name=file.filename,
+                               supplier_id=supplier_id)
+        db.session.add(db_file)
+        db.session.flush()
+        file.save(os.path.join(
+            current_app.config['UPLOAD_FOLDER'], db_file.internal_name))
+        db_file.size = os.path.getsize(db_file.file_path)
+        db.session.commit()
 
 
 class File(db.Model):
@@ -151,27 +246,79 @@ class File(db.Model):
         return f'File({self.id}: {self.full_name})'
 
     @property
-    def file_extension(self):
+    def file_extension(self) -> str:
+        """
+        File's extension
+
+        e.g. ``.pdf``, etc
+        """
         return os.path.splitext(self.full_name)[1]
 
     @property
-    def file_name(self):
+    def file_name(self) -> str:
+        """
+        File's base name
+
+        e.g. ``hello`` of ``hello.pdf``
+        """
         return os.path.splitext(self.full_name)[0]
 
     @property
-    def internal_name(self):
+    def internal_name(self) -> str:
+        '''
+        File's internal name
+
+        Normally is ``id`` + ``extention``
+        '''
         return f'{self.id}{self.file_extension}'
 
     @property
-    def file_path(self):
+    def file_path(self) -> str:
+        '''
+        File's path in file system
+        '''
         return os.path.join(current_app.config['UPLOAD_FOLDER'], self.internal_name)
 
     @property
-    def size_humanized(self):
+    def size_humanized(self) -> str:
+        '''
+        Human readable file size
+
+        e.g. ``4.1 kB``
+        '''
         return naturalsize(self.size, format="%.2f")
+
+    def delete(self):
+        '''
+        Move the file to the trash bin
+
+        set the ``delete_date`` to current time, may be delete from the file system days later
+        '''
+        self.delete_date = datetime.utcnow()
+        db.session.commit()
+
+    def restore(self):
+        '''
+        Restore the file
+
+        set the ``delete_date`` to ``None``
+        '''
+        self.delete_date = None
+        db.session.commit()
+
+    def update(self, form):
+        '''
+        Update file's information by the given form
+        '''
+        self.remark = form.remark.data
+        self.full_name = form.file_name.data + self.file_extension
+        db.session.commit()
 
     @staticmethod
     def split_ext(file: FileStorage) -> str:
+        '''
+        Get the extention of the given file
+        '''
         return os.path.splitext(file.filename)[1]
 
 
@@ -183,18 +330,11 @@ class EmployeeFile(File):
     }
 
     @property
-    def owner_url(self):
+    def owner_url(self) -> str:
+        '''
+        return url of the associated Employee's detail view
+        '''
         return url_for('employee.detail', employee_id=self.employee_id, _anchor='Files')
-
-    @classmethod
-    def save_file(cls, file: FileStorage, employee_id: int):
-        db_file = cls(full_name=file.filename, employee_id=employee_id)
-        db.session.add(db_file)
-        db.session.flush()
-        file.save(os.path.join(
-            current_app.config['UPLOAD_FOLDER'], db_file.internal_name))
-        db_file.size = os.path.getsize(db_file.file_path)
-        db.session.commit()
 
 
 class SupplierFile(File):
@@ -205,15 +345,8 @@ class SupplierFile(File):
     }
 
     @property
-    def owner_url(self):
+    def owner_url(self) -> str:
+        '''
+        return url of the associated Supplier's detail view
+        '''
         return url_for('supplier.detail', supplier_id=self.supplier_id, _anchor='Files')
-
-    @classmethod
-    def save_file(cls, file: FileStorage, supplier_id: int):
-        db_file = cls(full_name=file.filename, supplier_id=supplier_id)
-        db.session.add(db_file)
-        db.session.flush()
-        file.save(os.path.join(
-            current_app.config['UPLOAD_FOLDER'], db_file.internal_name))
-        db_file.size = os.path.getsize(db_file.file_path)
-        db.session.commit()
