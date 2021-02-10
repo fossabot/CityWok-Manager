@@ -28,7 +28,7 @@ def new():
         Supplier.new(form)
         flash('Successfully added new supplier', 'success')
         return redirect(url_for('supplier.index'))
-    return render_template('supplier/new.html', title='New Supplier', form=form)
+    return render_template('supplier/form.html', title='New Supplier', form=form)
 
 
 @supplier.route("/<int:supplier_id>")
@@ -58,7 +58,7 @@ def update(supplier_id):
 
     form.process(obj=supplier)
 
-    return render_template('supplier/update.html',
+    return render_template('supplier/form.html',
                            supplier=supplier,
                            form=form,
                            title='Update supplier')

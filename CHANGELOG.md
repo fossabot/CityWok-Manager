@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Write comments for custom classes and functions
 
+### Changed
+- Migrating Bootstrap to v5 
+- Merge `update.html` and `new.html` to `form.html`, for both employee and supplier Module
+
 ## [0.5.0] - 2021-02-09
 ### Added
 - Flask extensions

@@ -31,7 +31,7 @@ def new():
         Employee.new(form)
         flash('Successfully added new employee', 'success')
         return redirect(url_for('employee.index'))
-    return render_template('employee/new.html',
+    return render_template('employee/form.html',
                            title='New Employee',
                            form=form)
 
@@ -62,7 +62,7 @@ def update(employee_id):
 
     form.process(obj=employee)
 
-    return render_template('employee/update.html',
+    return render_template('employee/form.html',
                            employee=employee,
                            form=form,
                            title='Update employee')
