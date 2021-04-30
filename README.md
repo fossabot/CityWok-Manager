@@ -1,4 +1,4 @@
-# CityWok Management system
+# CityWok Manager
 
 ## Introduction
 A website base management system for a restaurante.
