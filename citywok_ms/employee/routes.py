@@ -1,5 +1,5 @@
 from citywok_ms import db
-from citywok_ms.models import Employee, EmployeeFile, File
+from citywok_ms.employee.models import Employee, File
 from citywok_ms.employee.forms import EmployeeForm
 from citywok_ms.file.forms import FileForm
 from flask import Blueprint, flash, redirect, render_template, url_for

@@ -1,10 +1,13 @@
 import operator
+from functools import total_ordering
+
 import six
+from citywok_ms.utils import BlankCountry
 from sqlalchemy_utils import i18n
 from sqlalchemy_utils.primitives.country import Country
-from wtforms_components import SelectField
+from sqlalchemy_utils.utils import str_coercible
 from wtforms_alchemy import CountryField
-from citywok_ms.utils import BlankCountry
+from wtforms_components import SelectField
 
 
 class BlankSelectField(SelectField):
@@ -46,3 +49,22 @@ class BlankCountryField(SelectField):
             return None
         else:
             return BlankCountry(value)
+
+@total_ordering
+@str_coercible
+class BlankCountry(Country):
+    def __init__(self, code_or_country):
+        super(BlankCountry, self).__init__(code_or_country)
+
+    @classmethod
+    def validate(self, code):
+        try:
+            i18n.babel.Locale('en').territories[code]
+        except KeyError:
+            if code == '':
+                pass
+            else:
+                raise ValueError(
+                    'Could not convert string to country code: {0}'.format(
+                        code)
+                )

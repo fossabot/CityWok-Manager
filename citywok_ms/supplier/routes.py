@@ -1,5 +1,5 @@
 from flask import Blueprint, flash, redirect, render_template, url_for
-from citywok_ms.models import Supplier, SupplierFile, File
+from citywok_ms.supplier.models import Supplier, File
 from citywok_ms.supplier.forms import SupplierForm
 from citywok_ms.file.forms import FileForm
 from citywok_ms import db

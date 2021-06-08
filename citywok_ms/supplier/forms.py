@@ -1,10 +1,8 @@
-from citywok_ms.models import Supplier
+from citywok_ms.supplier.models import Supplier
 from flask_wtf import FlaskForm
 from wtforms import HiddenField, StringField, SubmitField, TextAreaField
-from wtforms.fields.html5 import (DateField, DecimalField, EmailField,
-                                  IntegerField, TelField)
-from wtforms.validators import (Email, InputRequired, NumberRange, Optional,
-                                ValidationError)
+from wtforms.fields.html5 import EmailField, IntegerField, TelField
+from wtforms.validators import Email, InputRequired, Optional, ValidationError
 
 
 class SupplierForm(FlaskForm):

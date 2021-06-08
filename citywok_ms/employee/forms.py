@@ -1,8 +1,8 @@
 from datetime import date
 
-from citywok_ms.fields import BlankCountryField, BlankSelectField
-from citywok_ms.models import Employee
+from citywok_ms.employee.models import Employee
 from citywok_ms.utils import ID, SEX
+from citywok_ms.utils.fields import BlankCountryField, BlankSelectField
 from flask_wtf import FlaskForm
 from wtforms import HiddenField, StringField, SubmitField, TextAreaField
 from wtforms.fields.html5 import (DateField, DecimalField, EmailField,

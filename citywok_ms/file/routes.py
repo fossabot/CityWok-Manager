@@ -1,12 +1,9 @@
-from datetime import datetime
-
-from flask.helpers import send_file
-
 from citywok_ms import db
 from citywok_ms.file.forms import FileUpdateForm
-from citywok_ms.models import File
-from flask import (Blueprint, current_app, flash, redirect, render_template,
-                   request, send_from_directory, url_for)
+from citywok_ms.file.models import File
+from flask import (Blueprint, flash, redirect, render_template,
+                   url_for)
+from flask.helpers import send_file
 
 file = Blueprint('file', __name__, url_prefix="/file")
 
