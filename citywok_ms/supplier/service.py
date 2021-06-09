@@ -1,18 +1,17 @@
-from citywok_ms.file.models import SupplierFile
-import os
-from citywok_ms.file.forms import FileForm
 from typing import List
-from citywok_ms.supplier.models import Supplier
-from citywok_ms.supplier.forms import SupplierForm
+
 from citywok_ms import db
-from flask import current_app
+from citywok_ms.file.models import SupplierFile
+from citywok_ms.supplier.forms import SupplierForm
+from citywok_ms.supplier.models import Supplier
 
 
-def create_supplier(form: SupplierForm):
+def create_supplier(form: SupplierForm) -> Supplier:
     supplier = Supplier()
     form.populate_obj(supplier)
     db.session.add(supplier)
     db.session.commit()
+    return supplier
 
 
 def update_supplier(supplier: Supplier, form: SupplierForm):
@@ -26,16 +25,6 @@ def get_suppliers() -> List[Supplier]:
 
 def get_supplier(supplier_id: int) -> Supplier:
     return db.session.query(Supplier).get_or_404(supplier_id)
-
-
-def add_supplier_file(supplier_id: int, form: FileForm):
-    file = form.file.data
-    db_file = SupplierFile(full_name=file.filename, supplier_id=supplier_id)
-    db.session.add(db_file)
-    db.session.flush()
-    file.save(os.path.join(current_app.config["UPLOAD_FOLDER"], db_file.internal_name))
-    db_file.size = os.path.getsize(db_file.path)
-    db.session.commit()
 
 
 def get_supplier_active_files(supplier_id: int) -> List[SupplierFile]:

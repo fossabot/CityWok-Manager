@@ -1,4 +1,6 @@
+import citywok_ms.employee.message as employeemsg
 import citywok_ms.employee.service as employeeservice
+import citywok_ms.file.message as filemsg
 import citywok_ms.file.service as fileservice
 from citywok_ms.employee.forms import EmployeeForm
 from citywok_ms.file.forms import FileForm
@@ -11,7 +13,7 @@ employee = Blueprint("employee", __name__, url_prefix="/employee")
 def index():
     return render_template(
         "employee/index.html",
-        title="Employees",
+        title=employeemsg.INDEX_TITLE,
         employees=employeeservice.get_active_employees(),
         i_employees=employeeservice.get_inactive_employees(),
     )
@@ -21,17 +23,18 @@ def index():
 def new():
     form = EmployeeForm()
     if form.validate_on_submit():
-        employeeservice.create_employee(form)
-        flash("Successfully added new employee", "success")
+        employee = employeeservice.create_employee(form)
+        flash(employeemsg.NEW_SUCCESS.format(name=employee.full_name), "success")
         return redirect(url_for("employee.index"))
-    return render_template("employee/form.html", title="New Employee", form=form)
+    return render_template("employee/form.html", title=employeemsg.NEW_TITLE, form=form)
 
 
 @employee.route("/<int:employee_id>")
 def detail(employee_id):
+    print(fileservice.get_employee_deleted_files(employee_id))
     return render_template(
         "employee/detail.html",
-        title="Employee Detail",
+        title=employeemsg.DETAIL_TITLE,
         employee=employeeservice.get_employee(employee_id),
         active_files=fileservice.get_employee_active_files(employee_id),
         deleted_files=fileservice.get_employee_deleted_files(employee_id),
@@ -46,13 +49,16 @@ def update(employee_id):
     form.hide_id.data = employee_id
     if form.validate_on_submit():
         employeeservice.update_employee(employee, form)
-        flash("Employee information has been updated", "success")
+        flash(employeemsg.UPDATE_SUCCESS.format(name=employee.full_name), "success")
         return redirect(url_for("employee.detail", employee_id=employee_id))
 
     form.process(obj=employee)
 
     return render_template(
-        "employee/form.html", employee=employee, form=form, title="Update employee"
+        "employee/form.html",
+        employee=employee,
+        form=form,
+        title=employeemsg.UPDATE_TITLE,
     )
 
 
@@ -60,15 +66,15 @@ def update(employee_id):
 def inactivate(employee_id):
     employee = employeeservice.get_employee(employee_id)
     employeeservice.inactivate_employee(employee)
-    flash("Employee has been inactivated", "success")
+    flash(employeemsg.INACTIVATE_SUCCESS.format(name=employee.full_name), "success")
     return redirect(url_for("employee.detail", employee_id=employee_id))
 
 
 @employee.route("/<int:employee_id>/activate", methods=["POST"])
 def activate(employee_id):
     employee = employeeservice.get_employee(employee_id)
-    employee.activate()
-    flash("Employee has been activated", "success")
+    employeeservice.activate_employee(employee)
+    flash(employeemsg.ACTIVATE_SUCCESS.format(name=employee.full_name), "success")
     return redirect(url_for("employee.detail", employee_id=employee_id))
 
 
@@ -77,8 +83,11 @@ def upload(employee_id):
     form = FileForm()
     file = form.file.data
     if form.validate_on_submit():
-        employeeservice.add_employee_file(employee_id, form)
-        flash("File has been submited", "success")
+        db_file = fileservice.add_employee_file(employee_id, form)
+        flash(filemsg.UPLOAD_SUCCESS.format(name=db_file.full_name), "success")
     else:
-        flash(f'Invalid File Format: "{fileservice.split_file_format(file)}"', "danger")
+        flash(
+            filemsg.INVALID_FORMAT.format(format=fileservice.split_file_format(file)),
+            "danger",
+        )
     return redirect(url_for("employee.detail", employee_id=employee_id))

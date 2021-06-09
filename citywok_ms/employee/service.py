@@ -1,18 +1,15 @@
-from citywok_ms.file.forms import FileForm
-import os
 from typing import List
-from citywok_ms.file.models import EmployeeFile
 from citywok_ms.employee.forms import EmployeeForm
 from citywok_ms.employee.models import Employee
 from citywok_ms import db
-from flask import current_app
 
 
-def create_employee(form: EmployeeForm):
+def create_employee(form: EmployeeForm) -> Employee:
     employee = Employee()
     form.populate_obj(employee)
     db.session.add(employee)
     db.session.commit()
+    return employee
 
 
 def update_employee(employee: Employee, form: EmployeeForm):
@@ -27,16 +24,6 @@ def activate_employee(employee: Employee):
 
 def inactivate_employee(employee: Employee):
     employee.active = False
-    db.session.commit()
-
-
-def add_employee_file(employee_id: int, form: FileForm):
-    file = form.file.data
-    db_file = EmployeeFile(full_name=file.filename, employee_id=employee_id)
-    db.session.add(db_file)
-    db.session.flush()
-    file.save(os.path.join(current_app.config["UPLOAD_FOLDER"], db_file.internal_name))
-    db_file.size = os.path.getsize(db_file.path)
     db.session.commit()
 
 

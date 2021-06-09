@@ -2,6 +2,7 @@ from citywok_ms.file.forms import FileUpdateForm
 from flask import Blueprint, flash, redirect, render_template, url_for
 from flask.helpers import send_file
 import citywok_ms.file.service as fileservice
+import citywok_ms.file.message as filemsg
 
 file = Blueprint("file", __name__, url_prefix="/file")
 
@@ -21,10 +22,10 @@ def download(file_id, file_name=None):
 def delete(file_id):
     f = fileservice.get_file(file_id)
     if f.delete_date:
-        flash("File has already been deleted", "info")
+        flash(filemsg.DELETE_DUPLICATE.format(name=f.full_name), "info")
     else:
         fileservice.delete_file(f)
-        flash("File has been move to trash bin", "success")
+        flash(filemsg.DELETE_SUCCESS.format(name=f.full_name), "success")
     return redirect(f.owner_url)
 
 
@@ -32,10 +33,10 @@ def delete(file_id):
 def restore(file_id):
     f = fileservice.get_file(file_id)
     if not f.delete_date:
-        flash("File hasn't been deleted", "info")
+        flash(filemsg.RESTORE_DUPLICATE.format(name=f.full_name), "info")
     else:
         fileservice.restore_file(f)
-        flash("File has been restore", "success")
+        flash(filemsg.RESTORE_SUCCESS.format(name=f.full_name), "success")
     return redirect(f.owner_url)
 
 
@@ -45,8 +46,10 @@ def update(file_id):
     form = FileUpdateForm()
     if form.validate_on_submit():
         fileservice.update_file(f, form)
-        flash("File has been update", "success")
+        flash(filemsg.UPLOAD_SUCCESS.format(name=f.full_name), "success")
         return redirect(f.owner_url)
     form.file_name.data = f.base_name
     form.remark.data = f.remark
-    return render_template("file/update.html", title="Update File", form=form, file=f)
+    return render_template(
+        "file/update.html", title=filemsg.UPDATE_TITLE, form=form, file=f
+    )

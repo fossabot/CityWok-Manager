@@ -1,7 +1,8 @@
 from datetime import datetime
-from citywok_ms.file.forms import FileUpdateForm
+from citywok_ms.file.forms import FileForm, FileUpdateForm
 import os
 from typing import List
+from flask import current_app
 
 from werkzeug.datastructures import FileStorage
 
@@ -9,7 +10,7 @@ from citywok_ms import db
 from citywok_ms.file.models import EmployeeFile, File, SupplierFile
 
 
-def get_file(file_id: int):
+def get_file(file_id: int) -> File:
     return db.session.query(File).get_or_404(file_id)
 
 
@@ -75,3 +76,25 @@ def get_supplier_deleted_files(supplier_id: int) -> List[SupplierFile]:
         )
         .all()
     )
+
+
+def add_employee_file(employee_id: int, form: FileForm) -> EmployeeFile:
+    file = form.file.data
+    db_file = EmployeeFile(full_name=file.filename, employee_id=employee_id)
+    db.session.add(db_file)
+    db.session.flush()
+    file.save(os.path.join(current_app.config["UPLOAD_FOLDER"], db_file.internal_name))
+    db_file.size = os.path.getsize(db_file.path)
+    db.session.commit()
+    return db_file
+
+
+def add_supplier_file(supplier_id: int, form: FileForm) -> SupplierFile:
+    file = form.file.data
+    db_file = SupplierFile(full_name=file.filename, supplier_id=supplier_id)
+    db.session.add(db_file)
+    db.session.flush()
+    file.save(os.path.join(current_app.config["UPLOAD_FOLDER"], db_file.internal_name))
+    db_file.size = os.path.getsize(db_file.path)
+    db.session.commit()
+    return db_file
