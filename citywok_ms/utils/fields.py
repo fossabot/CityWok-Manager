@@ -2,11 +2,9 @@ import operator
 from functools import total_ordering
 
 import six
-from citywok_ms.utils import BlankCountry
 from sqlalchemy_utils import i18n
 from sqlalchemy_utils.primitives.country import Country
 from sqlalchemy_utils.utils import str_coercible
-from wtforms_alchemy import CountryField
 from wtforms_components import SelectField
 
 
@@ -49,6 +47,7 @@ class BlankCountryField(SelectField):
             return None
         else:
             return BlankCountry(value)
+
 
 @total_ordering
 @str_coercible

@@ -21,7 +21,7 @@ def create_app(config_class=Config):
 
     app.config.from_object(config_class)
 
-    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+    os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
     i18n.get_locale = flask_babel.get_locale
 
@@ -36,6 +36,7 @@ def create_app(config_class=Config):
         from citywok_ms.employee.routes import employee
         from citywok_ms.supplier.routes import supplier
         from citywok_ms.file.routes import file
+
         # blueprints
         app.register_blueprint(employee)
         app.register_blueprint(supplier)
@@ -46,4 +47,4 @@ def create_app(config_class=Config):
 
 @babel.localeselector
 def get_locale():
-    return request.accept_languages.best_match(current_app.config['LANGUAGES'])
+    return request.accept_languages.best_match(current_app.config["LANGUAGES"])

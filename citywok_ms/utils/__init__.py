@@ -12,4 +12,3 @@ FILEALLOWED = tuple(
     odf ods gnumeric abw doc docx xls xlsx
     csv ini json plist xml yaml yml gz bz2
     zip tar tgz txz 7z pdf'''.split())
-
