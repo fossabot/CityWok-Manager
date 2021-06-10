@@ -8,4 +8,4 @@ UPDATE_TITLE = "Update Employee"
 NEW_SUCCESS = 'New employee "{name}" has been added.'
 UPDATE_SUCCESS = 'Employee "{name}" has been updated.'
 ACTIVATE_SUCCESS = 'Employee "{name}" has been activated.'
-INACTIVATE_SUCCESS = 'Employee "{name}" has been inactivated.'
+INACTIVATE_SUCCESS = 'Employee "{name}" has been suspended.'

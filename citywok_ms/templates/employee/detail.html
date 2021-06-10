@@ -5,7 +5,7 @@
     <!-- title -->
     <h1>{{title}}</h1>
     {% if not employee.active %}
-    <p class="text-warning mb-2">Inactive</p>
+    <p class="text-warning mb-2">Suspended</p>
     {% endif %}
     <div class="d-print-none">
         <a href="{{url_for('employee.update',employee_id=employee.id)}}" class="btn btn-primary "
@@ -78,14 +78,14 @@
                 <input type="button" value="New File" class="btn btn-success"
                     onclick="document.getElementById('selectedFile').click();" />
             </form>
-            {% if deleted_files %}
+            {% if employee.deleted_files %}
             <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#deletedFiles"
                 aria-expanded="false" aria-controls="deletedFiles" id="fileButton">
                 Show deleted files
             </button>
             {% endif %}
         </div>
-        {% if active_files %}
+        {% if employee.active_files %}
         <div class="table-responsive">
             <table class="table table-striped table-bordered text-nowrap text-center">
                 <thead class="table-dark">
@@ -98,7 +98,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for file in active_files %}
+                    {% for file in employee.active_files %}
                     <tr>
                         <th>
                             <a href="{{ url_for('file.download',file_id=file.id) }}"><strong>{{ file.full_name
@@ -141,7 +141,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for file in deleted_files %}
+                        {% for file in employee.deleted_files %}
                         <tr>
                             <th>
                                 <a href="{{ url_for('file.download',file_id=file.id) }}"><strong>{{ file.full_name

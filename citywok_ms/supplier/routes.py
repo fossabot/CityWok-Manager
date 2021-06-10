@@ -1,9 +1,9 @@
-import citywok_ms.file.message as filemsg
-import citywok_ms.file.service as fileservice
-import citywok_ms.supplier.message as suppliermsg
-import citywok_ms.supplier.service as supplierservice
+from citywok_ms.file.models import File, SupplierFile
+import citywok_ms.file.message as file_msg
+import citywok_ms.supplier.message as supplier_msg
 from citywok_ms.file.forms import FileForm
 from citywok_ms.supplier.forms import SupplierForm
+from citywok_ms.supplier.models import Supplier
 from flask import Blueprint, flash, redirect, render_template, url_for
 
 supplier = Blueprint("supplier", __name__, url_prefix="/supplier")
@@ -13,8 +13,8 @@ supplier = Blueprint("supplier", __name__, url_prefix="/supplier")
 def index():
     return render_template(
         "supplier/index.html",
-        title=suppliermsg.INDEX_TITLE,
-        suppliers=supplierservice.get_suppliers(),
+        title=supplier_msg.INDEX_TITLE,
+        suppliers=Supplier.get_all(),
     )
 
 
@@ -22,32 +22,32 @@ def index():
 def new():
     form = SupplierForm()
     if form.validate_on_submit():
-        supplier = supplierservice.create_supplier(form)
-        flash(suppliermsg.UPDATE_SUCCESS.format(name=supplier.name), "success")
+        Supplier.create_by_form(form)
+        flash(supplier_msg.UPDATE_SUCCESS.format(name=supplier.name), "success")
         return redirect(url_for("supplier.index"))
-    return render_template("supplier/form.html", title=suppliermsg.NEW_TITLE, form=form)
+    return render_template(
+        "supplier/form.html", title=supplier_msg.NEW_TITLE, form=form
+    )
 
 
 @supplier.route("/<int:supplier_id>")
 def detail(supplier_id):
     return render_template(
         "supplier/detail.html",
-        title=suppliermsg.INDEX_TITLE,
-        supplier=supplierservice.get_supplier(supplier_id),
-        active_files=fileservice.get_supplier_active_files(supplier_id),
-        deleted_files=fileservice.get_supplier_deleted_files(supplier_id),
+        title=supplier_msg.INDEX_TITLE,
+        supplier=Supplier.get_or_404(supplier_id),
         file_form=FileForm(),
     )
 
 
 @supplier.route("/<int:supplier_id>/update", methods=["GET", "POST"])
 def update(supplier_id):
-    supplier = supplierservice.get_supplier(supplier_id)
+    supplier = Supplier.get_or_404(supplier_id)
     form = SupplierForm()
     form.hide_id.data = supplier_id
     if form.validate_on_submit():
-        supplierservice.update_supplier(supplier, form)
-        flash(suppliermsg.UPDATE_SUCCESS.format(name=supplier.name), "success")
+        supplier.update_by_form(form)
+        flash(supplier_msg.UPDATE_SUCCESS.format(name=supplier.name), "success")
         return redirect(url_for("supplier.detail", supplier_id=supplier_id))
 
     form.process(obj=supplier)
@@ -56,7 +56,7 @@ def update(supplier_id):
         "supplier/form.html",
         supplier=supplier,
         form=form,
-        title=suppliermsg.UPDATE_TITLE,
+        title=supplier_msg.UPDATE_TITLE,
     )
 
 
@@ -65,11 +65,11 @@ def upload(supplier_id):
     form = FileForm()
     file = form.file.data
     if form.validate_on_submit():
-        db_file = fileservice.add_supplier_file(supplier_id, form)
-        flash(filemsg.UPLOAD_SUCCESS.format(name=db_file.full_name), "success")
+        db_file = SupplierFile.create_by_form(form, Supplier.get_or_404(supplier_id))
+        flash(file_msg.UPLOAD_SUCCESS.format(name=db_file.full_name), "success")
     else:
         flash(
-            filemsg.INVALID_FORMAT.format(format=fileservice.split_file_format(file)),
+            file_msg.INVALID_FORMAT.format(format=File.split_file_format(file)),
             "danger",
         )
     return redirect(url_for("supplier.detail", supplier_id=supplier_id))
