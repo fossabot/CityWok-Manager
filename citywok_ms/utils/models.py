@@ -1,5 +1,7 @@
 from decimal import Decimal
 
+from citywok_ms import db
+from flask_wtf import FlaskForm
 from sqlalchemy import Integer
 from sqlalchemy.types import TypeDecorator
 
@@ -27,6 +29,29 @@ class SqliteDecimal(TypeDecorator):
         # e.g. Integer 1234 in Sqlite will be converted to Decimal('12.34'),
         # when query takes place.
         if value is not None:
-            value = (Decimal(value) /
-                     self.multiplier_int).quantize(Decimal(10) ** -self.scale)
+            value = (Decimal(value) / self.multiplier_int).quantize(
+                Decimal(10) ** -self.scale
+            )
         return value
+
+
+class CRUDMixin(object):
+    @classmethod
+    def create_by_form(cls, form: FlaskForm):
+        instance = cls()
+        form.populate_obj(instance)
+        db.session.add(instance)
+        db.session.commit()
+        return instance
+
+    def update_by_form(self, form: FlaskForm):
+        form.populate_obj(self)
+        db.session.commit()
+
+    @classmethod
+    def get_all(cls):
+        return db.session.query(cls).all()
+
+    @classmethod
+    def get_or_404(cls, id: int):
+        return db.session.query(cls).get_or_404(id)

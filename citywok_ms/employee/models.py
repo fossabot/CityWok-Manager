@@ -1,13 +1,15 @@
+from citywok_ms.file.models import EmployeeFile
+from typing import List
 from citywok_ms import db
 from citywok_ms.utils import ID, SEX
-from citywok_ms.utils.models import SqliteDecimal
+from citywok_ms.utils.models import CRUDMixin, SqliteDecimal
 from sqlalchemy import Boolean, Column, Date, Integer, String, Text
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship, validates
 from sqlalchemy_utils import ChoiceType, CountryType
 
 
-class Employee(db.Model):
+class Employee(db.Model, CRUDMixin):
     id = Column(Integer, primary_key=True)
     first_name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)
@@ -43,3 +45,41 @@ class Employee(db.Model):
             raise ValueError(f'"{sex}" not in SEX set')
         else:
             return sex
+
+    @staticmethod
+    def get_active() -> List["Employee"]:
+        return db.session.query(Employee).filter_by(active=True).all()
+
+    @staticmethod
+    def get_suspended() -> List["Employee"]:
+        return db.session.query(Employee).filter_by(active=False).all()
+
+    def activate(self):
+        self.active = True
+        db.session.commit()
+
+    def suspend(self):
+        self.active = False
+        db.session.commit()
+
+    @property
+    def active_files(self) -> List[EmployeeFile]:
+        return (
+            db.session.query(EmployeeFile)
+            .filter(
+                EmployeeFile.employee_id == self.id,
+                EmployeeFile.delete_date.is_(None),
+            )
+            .all()
+        )
+
+    @property
+    def deleted_files(self) -> List[EmployeeFile]:
+        return (
+            db.session.query(EmployeeFile)
+            .filter(
+                EmployeeFile.employee_id == self.id,
+                EmployeeFile.delete_date.isnot(None),
+            )
+            .all()
+        )

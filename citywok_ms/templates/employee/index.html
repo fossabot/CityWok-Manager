@@ -8,7 +8,7 @@
     <div class="mb-2 d-print-none">
         <a href="{{url_for('employee.new')}}" class="btn btn-success">New</a>
     </div>
-    {% if employees %}
+    {% if active_employees %}
     <div class="table-responsive">
         <table class="table table-striped table-bordered text-nowrap text-center">
             <thead class="table-dark">
@@ -24,7 +24,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for employee in employees %}
+                {% for employee in active_employees %}
                 <tr>
                     <th>
                         <strong>{{ employee.id }}</strong>
@@ -44,7 +44,7 @@
         </table>
     </div>
     {% endif %}
-    {% if i_employees %}
+    {% if suspended_employees %}
     <hr>
     <h3>Inactive Employees</h3>
     <div class="table-responsive">
@@ -62,7 +62,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for employee in i_employees %}
+                {% for employee in suspended_employees %}
                 <tr>
                     <th>
                         <strong>{{ employee.id }}</strong>
