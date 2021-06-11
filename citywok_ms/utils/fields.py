@@ -9,14 +9,10 @@ from wtforms_components import SelectField
 
 
 class BlankSelectField(SelectField):
-    '''
-    Modified SelectFiled that allows blank option
-    '''
-
     def __init__(self, message, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.message = message
-        self.choices = [('', self.message)] + self.choices
+        self.messages = message
+        self.choices = [("", self.messages)] + self.choices
 
     def process_formdata(self, valuelist):
         if valuelist:
@@ -25,7 +21,7 @@ class BlankSelectField(SelectField):
 
 class BlankCountryField(SelectField):
     def __init__(self, message, *args, **kwargs):
-        kwargs['coerce'] = self.Coerce
+        kwargs["coerce"] = self.Coerce
         super(BlankCountryField, self).__init__(*args, **kwargs)
         self.choices = self._get_choices
         self.m = message
@@ -37,13 +33,13 @@ class BlankCountryField(SelectField):
         territories = [
             (code, name)
             for code, name in six.iteritems(i18n.get_locale().territories)
-            if len(code) == 2 and code not in ('QO', 'QU', 'ZZ')
+            if len(code) == 2 and code not in ("QO", "QU", "ZZ")
         ]
-        return [('', self.m)] + sorted(territories, key=operator.itemgetter(1))
+        return [("", self.m)] + sorted(territories, key=operator.itemgetter(1))
 
     @staticmethod
     def Coerce(value):
-        if value == '':
+        if value == "":
             return None
         else:
             return BlankCountry(value)
@@ -58,12 +54,11 @@ class BlankCountry(Country):
     @classmethod
     def validate(self, code):
         try:
-            i18n.babel.Locale('en').territories[code]
+            i18n.babel.Locale("en").territories[code]
         except KeyError:
-            if code == '':
+            if code == "":
                 pass
             else:
                 raise ValueError(
-                    'Could not convert string to country code: {0}'.format(
-                        code)
+                    "Could not convert string to country code: {0}".format(code)
                 )
