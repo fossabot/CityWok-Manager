@@ -13,3 +13,9 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     LANGUAGES = ["en"]
     UPLOAD_FOLDER = os.environ.get("UPLOAD_FOLDER") or os.path.join(basedir, "uploads")
+
+
+class TestConfig(Config):
+    TESTING = True
+    WTF_CSRF_ENABLED = False
+    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
