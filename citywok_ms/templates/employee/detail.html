@@ -11,9 +11,9 @@
         <a href="{{url_for('employee.update',employee_id=employee.id)}}" class="btn btn-primary "
             id="update_button">Update</a>
         {% if employee.active %}
-        <form action="{{url_for('employee.inactivate',employee_id=employee.id)}}" method="post" class="d-inline">
+        <form action="{{url_for('employee.suspend',employee_id=employee.id)}}" method="post" class="d-inline">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <input type="submit" value="Inactivate" class="btn btn-danger">
+            <input type="submit" value="suspend" class="btn btn-danger">
         </form>
         {% else %}
         <form action="{{url_for('employee.activate',employee_id=employee.id)}}" method="post" class="d-inline">
@@ -57,7 +57,7 @@
     </dl>
     <dl class="row">
         <dt class="col-4">Start date:</dt>
-        <dd class="col-8">{{ employee.start_date or '-'}}</dd>
+        <dd class="col-8">{{ employee.employment_date or '-'}}</dd>
         <dt class="col-4">Total Salary:</dt>
         <dd class="col-8">{{ employee.total_salary }}</dd>
         <dt class="col-4">Taxed Salary:</dt>

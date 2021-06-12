@@ -1,7 +1,7 @@
 from citywok_ms.file.forms import FileUpdateForm
 from flask import Blueprint, flash, redirect, render_template, url_for
 from flask.helpers import send_file
-import citywok_ms.file.message as file_msg
+import citywok_ms.file.messages as file_msg
 from citywok_ms.file.models import File
 
 file = Blueprint("file", __name__, url_prefix="/file")
@@ -46,7 +46,7 @@ def update(file_id):
     form = FileUpdateForm()
     if form.validate_on_submit():
         f.update_by_form(form)
-        flash(file_msg.UPLOAD_SUCCESS.format(name=f.full_name), "success")
+        flash(file_msg.UPDATE_SUCCESS.format(name=f.full_name), "success")
         return redirect(f.owner_url)
     form.file_name.data = f.base_name
     form.remark.data = f.remark

@@ -1,6 +1,6 @@
 from citywok_ms.file.models import EmployeeFile, File
-import citywok_ms.employee.message as employee_msg
-import citywok_ms.file.message as file_msg
+import citywok_ms.employee.messages as employee_msg
+import citywok_ms.file.messages as file_msg
 from citywok_ms.employee.forms import EmployeeForm
 from citywok_ms.file.forms import FileForm
 from flask import Blueprint, flash, redirect, render_template, url_for
@@ -61,11 +61,11 @@ def update(employee_id):
     )
 
 
-@employee.route("/<int:employee_id>/inactivate", methods=["POST"])
-def inactivate(employee_id):
+@employee.route("/<int:employee_id>/suspend", methods=["POST"])
+def suspend(employee_id):
     employee = Employee.get_or_404(employee_id)
     employee.suspend()
-    flash(employee_msg.INACTIVATE_SUCCESS.format(name=employee.full_name), "success")
+    flash(employee_msg.SUSPEND_SUCCESS.format(name=employee.full_name), "success")
     return redirect(url_for("employee.detail", employee_id=employee_id))
 
 
@@ -84,9 +84,11 @@ def upload(employee_id):
     if form.validate_on_submit():
         db_file = EmployeeFile.create_by_form(form, Employee.get_or_404(employee_id))
         flash(file_msg.UPLOAD_SUCCESS.format(name=db_file.full_name), "success")
-    else:
+    elif file is not None:
         flash(
             file_msg.INVALID_FORMAT.format(format=File.split_file_format(file)),
             "danger",
         )
+    else:
+        flash(file_msg.NO_FILE, "danger")
     return redirect(url_for("employee.detail", employee_id=employee_id))

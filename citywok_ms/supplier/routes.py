@@ -1,6 +1,6 @@
 from citywok_ms.file.models import File, SupplierFile
-import citywok_ms.file.message as file_msg
-import citywok_ms.supplier.message as supplier_msg
+import citywok_ms.file.messages as file_msg
+import citywok_ms.supplier.messages as supplier_msg
 from citywok_ms.file.forms import FileForm
 from citywok_ms.supplier.forms import SupplierForm
 from citywok_ms.supplier.models import Supplier
@@ -22,8 +22,8 @@ def index():
 def new():
     form = SupplierForm()
     if form.validate_on_submit():
-        Supplier.create_by_form(form)
-        flash(supplier_msg.UPDATE_SUCCESS.format(name=supplier.name), "success")
+        supplier = Supplier.create_by_form(form)
+        flash(supplier_msg.NEW_SUCCESS.format(name=supplier.name), "success")
         return redirect(url_for("supplier.index"))
     return render_template(
         "supplier/form.html", title=supplier_msg.NEW_TITLE, form=form
@@ -34,7 +34,7 @@ def new():
 def detail(supplier_id):
     return render_template(
         "supplier/detail.html",
-        title=supplier_msg.INDEX_TITLE,
+        title=supplier_msg.DETAIL_TITLE,
         supplier=Supplier.get_or_404(supplier_id),
         file_form=FileForm(),
     )
@@ -67,9 +67,11 @@ def upload(supplier_id):
     if form.validate_on_submit():
         db_file = SupplierFile.create_by_form(form, Supplier.get_or_404(supplier_id))
         flash(file_msg.UPLOAD_SUCCESS.format(name=db_file.full_name), "success")
-    else:
+    elif file is not None:
         flash(
             file_msg.INVALID_FORMAT.format(format=File.split_file_format(file)),
             "danger",
         )
+    else:
+        flash(file_msg.NO_FILE, "danger")
     return redirect(url_for("supplier.detail", supplier_id=supplier_id))
