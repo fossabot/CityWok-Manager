@@ -22,8 +22,8 @@ def index():
 def new():
     form = SupplierForm()
     if form.validate_on_submit():
-        Supplier.create_by_form(form)
-        flash(supplier_msg.UPDATE_SUCCESS.format(name=supplier.name), "success")
+        supplier = Supplier.create_by_form(form)
+        flash(supplier_msg.NEW_SUCCESS.format(name=supplier.name), "success")
         return redirect(url_for("supplier.index"))
     return render_template(
         "supplier/form.html", title=supplier_msg.NEW_TITLE, form=form
@@ -34,7 +34,7 @@ def new():
 def detail(supplier_id):
     return render_template(
         "supplier/detail.html",
-        title=supplier_msg.INDEX_TITLE,
+        title=supplier_msg.DETAIL_TITLE,
         supplier=Supplier.get_or_404(supplier_id),
         file_form=FileForm(),
     )

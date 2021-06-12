@@ -2,7 +2,8 @@ from datetime import date
 import datetime
 import os
 from citywok_ms.employee.models import Employee
-from citywok_ms.file.models import EmployeeFile
+from citywok_ms.supplier.models import Supplier
+from citywok_ms.file.models import EmployeeFile, SupplierFile
 import pytest
 from citywok_ms import create_app, db, current_app
 from config import TestConfig
@@ -19,18 +20,6 @@ def app():
             yield app
             db.session.remove()
             db.drop_all()
-
-
-# @pytest.fixture
-# def client():
-#     with TemporaryDirectory() as temp_dir:
-#         TestConfig.UPLOAD_FOLDER = temp_dir
-#         app = create_app(config_class=TestConfig)
-#         with app.test_client() as testing_client:
-#             with app.app_context():
-#                 db.create_all()
-#                 yield testing_client  # this is where the testing happens!
-#                 db.drop_all()
 
 
 @pytest.fixture
@@ -121,6 +110,53 @@ def employee_with_file(employee):
     f.size = os.path.getsize(f.path)
 
     f = EmployeeFile(full_name="test_file", employee_id=2)
+    db.session.add(f)
+    db.session.flush()
+    with open(
+        os.path.join(current_app.config["UPLOAD_FOLDER"], str(f.id)), "x"
+    ) as file:
+        file.write("test_file")
+    f.size = os.path.getsize(f.path)
+    f.delete_date = datetime.datetime.now()
+    db.session.commit()
+
+
+@pytest.fixture
+def supplier():
+    supplier = Supplier(
+        name="BASIC",
+        principal="basic",
+    )
+    db.session.add(supplier)
+    supplier = Supplier(
+        name="FULL",
+        abbreviation="f",
+        principal="full",
+        contact="123123123",
+        email="123@mail.com",
+        nif="123123",
+        iban="PT50123123",
+        address="rua A",
+        postcode="1234-567",
+        city="city",
+        remark="REMARK",
+    )
+    db.session.add(supplier)
+    db.session.commit()
+
+
+@pytest.fixture
+def supplier_with_file(supplier):
+    f = SupplierFile(full_name="test_file", supplier_id=1)
+    db.session.add(f)
+    db.session.flush()
+    with open(
+        os.path.join(current_app.config["UPLOAD_FOLDER"], str(f.id)), "x"
+    ) as file:
+        file.write("test_file")
+    f.size = os.path.getsize(f.path)
+
+    f = SupplierFile(full_name="test_file", supplier_id=2)
     db.session.add(f)
     db.session.flush()
     with open(
