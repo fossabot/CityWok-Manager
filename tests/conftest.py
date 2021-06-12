@@ -1,9 +1,10 @@
 from datetime import date
 import datetime
 import os
+
 from citywok_ms.employee.models import Employee
 from citywok_ms.supplier.models import Supplier
-from citywok_ms.file.models import EmployeeFile, SupplierFile
+from citywok_ms.file.models import EmployeeFile, SupplierFile, File
 import pytest
 from citywok_ms import create_app, db, current_app
 from config import TestConfig
@@ -100,20 +101,20 @@ def employee():
 
 @pytest.fixture
 def employee_with_file(employee):
-    f = EmployeeFile(full_name="test_file", employee_id=1)
+    f = EmployeeFile(full_name="test_file.txt", employee_id=1)
     db.session.add(f)
     db.session.flush()
     with open(
-        os.path.join(current_app.config["UPLOAD_FOLDER"], str(f.id)), "x"
+        os.path.join(current_app.config["UPLOAD_FOLDER"], str(f.id) + ".txt"), "x"
     ) as file:
         file.write("test_file")
     f.size = os.path.getsize(f.path)
 
-    f = EmployeeFile(full_name="test_file", employee_id=2)
+    f = EmployeeFile(full_name="test_file.txt", employee_id=2)
     db.session.add(f)
     db.session.flush()
     with open(
-        os.path.join(current_app.config["UPLOAD_FOLDER"], str(f.id)), "x"
+        os.path.join(current_app.config["UPLOAD_FOLDER"], str(f.id) + ".txt"), "x"
     ) as file:
         file.write("test_file")
     f.size = os.path.getsize(f.path)
@@ -147,20 +148,20 @@ def supplier():
 
 @pytest.fixture
 def supplier_with_file(supplier):
-    f = SupplierFile(full_name="test_file", supplier_id=1)
+    f = SupplierFile(full_name="test_file.txt", supplier_id=1)
     db.session.add(f)
     db.session.flush()
     with open(
-        os.path.join(current_app.config["UPLOAD_FOLDER"], str(f.id)), "x"
+        os.path.join(current_app.config["UPLOAD_FOLDER"], str(f.id) + ".txt"), "x"
     ) as file:
         file.write("test_file")
     f.size = os.path.getsize(f.path)
 
-    f = SupplierFile(full_name="test_file", supplier_id=2)
+    f = SupplierFile(full_name="test_file.txt", supplier_id=2)
     db.session.add(f)
     db.session.flush()
     with open(
-        os.path.join(current_app.config["UPLOAD_FOLDER"], str(f.id)), "x"
+        os.path.join(current_app.config["UPLOAD_FOLDER"], str(f.id) + ".txt"), "x"
     ) as file:
         file.write("test_file")
     f.size = os.path.getsize(f.path)
